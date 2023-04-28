@@ -8,6 +8,7 @@ import Form from "@/components/Page";
 import OneProduct from "@/components/OneProduct";
 import Order from "@/components/Order";
 import Kypc from "@/components/Kypc";
+import Page from "@/components/Page";
 const routes = [
   {
     path: '/',
@@ -43,6 +44,11 @@ const routes = [
     component:OneProduct,
     props:true,
   },
+  {
+    path: '/page',
+    component:Page,
+  },
+
 
 
 
