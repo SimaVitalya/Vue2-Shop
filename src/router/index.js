@@ -9,6 +9,7 @@ import OneProduct from "@/components/OneProduct";
 import Order from "@/components/Order";
 import Kypc from "@/components/Kypc";
 import Page from "@/components/Page";
+import SortMain from "@/components/SortMain";
 const routes = [
   {
     path: '/',
@@ -31,7 +32,7 @@ const routes = [
     component:Order,
   },
   {
-    path: '/c',
+    path: '/test',
     component:Kypc,
   },
   {
@@ -48,7 +49,10 @@ const routes = [
     path: '/page',
     component:Page,
   },
-
+  {
+    path: '/sort',
+    component:SortMain,
+  },
 
 
 

@@ -93,6 +93,7 @@
 </template>
 <script>
 import axios from "axios";
+import Swal from "sweetalert2";
 
 export default {
 
@@ -121,14 +122,34 @@ export default {
         })
     }, addToCart(product) {
       this.$store.commit('addToCart', product); // Добавляем товар в корзину
+      this.showAlert('Товар добавлен');
     },
+    showAlert() {
+      const Toast = Swal.mixin({
+        toast: true,
+        position: 'center',
+        showConfirmButton: false,
+        timer: 1200,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+          toast.addEventListener('mouseenter', Swal.stopTimer)
+          toast.addEventListener('mouseleave', Swal.resumeTimer)
+        }
+      })
+
+      Toast.fire({
+        icon: 'success',
+        title: 'Товар добавлен'
+      });
+    },
+
   },
 
-  // watch: {
-  //   id: function (newId, oldId) {
-  //     this.getProducts();
-  //   }
-  // },
+  watch: {
+    id: function (newId, oldId) {
+      this.getProducts();
+    }
+  },
   mounted() {
     this.getProducts()
 

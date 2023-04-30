@@ -1,37 +1,24 @@
 <template>
   <v-container>
-    <div class="d-flex justify-end">
-
-      <v-btn
-        id="menu-activator"
-        color="primary"
-      >
-        Sort-by
-      </v-btn>
-
-      <v-menu activator="#menu-activator">
+    <div class="text-end">
+      <v-menu open-on-hover>
+        <template v-slot:activator="{ props }">
+          <v-btn color="primary" v-bind="props">
+            {{ activeSortTitle }}
+          </v-btn>
+        </template>
         <v-list>
-          <v-list-item
-            v-for="(item, index) in items"
-            :key="index"
-            :value="index"
-          >
+          <v-list-item v-for="(item, index) in sortItems" :key="index" @click="sort(item)">
             <v-list-item-title>{{ item.title }}</v-list-item-title>
           </v-list-item>
         </v-list>
       </v-menu>
     </div>
   </v-container>
-  <!--  sort end-->
-  <!--  product start-->
-  <v-container>
-    <h1> Корзина ({{ $store.state.cartCount }})</h1>
-
-  </v-container>
   <v-container>
     <v-row>
       <v-col
-        v-for="product in products"
+        v-for="product in items"
         :key="product.id"
         cols="3"
       >
@@ -100,41 +87,77 @@
       </v-col>
     </v-row>
   </v-container>
-  <v-container>
-
-  </v-container>
-  <!--  product-end-->
 </template>
-
 <script>
 import axios from "axios";
+import Swal from "sweetalert2";
 
 export default {
-  data: () => ({
-    selection: 2,
-    reveal: null,
-    items: [
-      {title: "Price >"},
-      {title: "Price <"},
-      {title: "Name a-z"},
-      {title: "Name z-a"},
-    ],
-    products: [],
-  }),
+  data() {
+    return {
+      reveal: null,
+      items: [],
+      sortItems: [
+        {title: 'Стандартная сортировка'},
+        {title: "сортировать от меньшей цены к большей"},
+        {title: "сортировать от большей цены к меньшей"},
+        {title: "Сортировать по имени от а до я"},
+        {title: "Сортировать по имени от я до а"},
+      ],
+      activeSortTitle: "Сортировать",
+    };
+  },
+  mounted() {
+    this.getItems();
+  },
   methods: {
-    async getProducts() {
-    await  axios.get("http://lar/api/products")
-      .then((backend) => {
-        this.products = backend.data;
+    getItems() {
+      axios.get("http://lar/api/items").then((response) => {
+        this.items = response.data;
       });
+    },
+    sort(item) {
+      if (item.title === "Стандартная сортировка") {
+        this.activeSortTitle = "Стандартная сортировка";
+        this.items.sort((a, b) => a.id - b.id); // Стандартная сортировка
+      }
+      if (item.title === "сортировать от меньшей цены к большей") {
+        this.activeSortTitle = "сортировать от меньшей цены к большей";
+        this.items.sort((a, b) => a.price - b.price);
+      } else if (item.title === "сортировать от большей цены к меньшей") {
+        this.activeSortTitle = "сортировать от большей цены к меньшей";
+        this.items.sort((a, b) => b.price - a.price);
+      } else if (item.title === "Сортировать по имени от я до а") {
+        this.activeSortTitle = "Сортировать по имени от я до а";
+        this.items.sort((a, b) => b.name.localeCompare(a.name));
+      } else if (item.title === "Сортировать по имени от а до я") {
+        this.activeSortTitle = "Сортировать по имени от а до я";
+        this.items.sort((a, b) => a.name.localeCompare(b.name));
+      }
     },
     addToCart(product) {
       this.$store.commit('addToCart', product); // Добавляем товар в корзину
+      this.showAlert('Товар добавлен');
     },
-  },
+    showAlert() {
+      const Toast = Swal.mixin({
+        toast: true,
+        position: 'center',
+        showConfirmButton: false,
+        timer: 1200,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+          toast.addEventListener('mouseenter', Swal.stopTimer)
+          toast.addEventListener('mouseleave', Swal.resumeTimer)
+        }
+      })
 
-  mounted() {
-    this.getProducts();
+      Toast.fire({
+        icon: 'success',
+        title: 'Товар добавлен',
+
+      });
+    },
   },
 };
 </script>

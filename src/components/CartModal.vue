@@ -10,7 +10,8 @@
 <!--        </v-badge>-->
 <!--      </v-btn>-->
 <!--    </template>-->
-    <v-card>
+
+    <v-card v-if="$store.state.cart.length > 0">
       <v-card-title>
         <span class="text-h5 text-center">Basket</span>
       </v-card-title>
@@ -108,6 +109,21 @@
 
 
     </v-card>
+    <v-card v-else>
+      <v-img
+        src="modal-cart-dummy.svg"
+        width="200"
+        height="200"
+        class="text-center align-self-center"
+      >
+      </v-img>
+      <v-card-title class="text-center">
+        <span class="text-h4 text-center">The basket is empty</span>
+      </v-card-title>
+      <v-card-text>
+        <p class="text-center">But it's never too late to fix it :)</p>
+      </v-card-text>
+    </v-card>
   </v-dialog>
 </template>
 
@@ -134,6 +150,7 @@
       },
       openButton(){
         this.dialog = true;
+
       }
     },
   }
