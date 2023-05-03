@@ -136,6 +136,12 @@ export default {
   mounted() {
     this.getProduct();
   },
+  watch: {
+    id: function (newId, oldId) {
+      this.getProduct();
+    }
+  },
+
 };
 </script>
 <style>

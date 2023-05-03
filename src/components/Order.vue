@@ -38,8 +38,8 @@
           <v-btn  type="submit" color="primary">Submit</v-btn>
         </v-form>
       </v-col>
-      <v-col cols='6'>
-        <v-card width="600" height="665" class="overflow-y-auto">
+      <v-col v-if="$store.state.cart.length > 0" cols='6'>
+        <v-card  width="600" height="665" class="overflow-y-auto">
           <v-card-text>
             <v-table>
               <thead>
@@ -106,7 +106,21 @@
           </v-card-footer>
         </v-card>
       </v-col>
-
+      <v-col v-else cols="6">
+        <v-img
+          src="modal-cart-dummy.svg"
+          width="200"
+          height="200"
+          class="mx-auto"
+        >
+        </v-img>
+        <v-card-title class="text-center">
+          <span class="text-h4">The basket is empty</span>
+        </v-card-title>
+        <v-card-text>
+          <p class="text-center">But it's never too late to fix it :)</p>
+        </v-card-text>
+      </v-col>
     </v-row>
   </v-container>
 </template>
@@ -257,6 +271,29 @@ export default {
   },
 }
 </script>
+<style scoped>
+
+
+/* Стили для скроллбара */
+.overflow-y-auto::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+.overflow-y-auto::-webkit-scrollbar-track {
+  background-color: #f5f5f5;
+  border-radius: 5px;
+}
+
+.overflow-y-auto::-webkit-scrollbar-thumb {
+  background-color: #888;
+  border-radius: 5px;
+}
+
+.overflow-y-auto::-webkit-scrollbar-thumb:hover {
+  background-color: #555;
+}
+</style>
 <style scoped>
 
 

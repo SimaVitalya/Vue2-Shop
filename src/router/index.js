@@ -10,6 +10,7 @@ import Order from "@/components/Order";
 import Kypc from "@/components/Kypc";
 import Page from "@/components/Page";
 import SortMain from "@/components/SortMain";
+import NotFound from "@/Pages/NotFound";
 const routes = [
   {
     path: '/',
@@ -52,6 +53,11 @@ const routes = [
   {
     path: '/sort',
     component:SortMain,
+  },
+  {
+    path: '/:catchAll(.*)',
+    name: 'NotFound',
+    component: NotFound
   },
 
 

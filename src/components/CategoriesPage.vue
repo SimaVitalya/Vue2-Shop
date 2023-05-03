@@ -1,19 +1,18 @@
 <template>
-  <v-container>
-    <div class="d-flex justify-end">
-      <v-btn
-        id="menu-activator"
-        color="primary"
-      >
-        Sort-by
-      </v-btn>
-
-      <v-menu activator="#menu-activator">
+  <v-container v-if="products.length > 0">
+    <div class="text-start">
+      <v-menu open-on-hover>
+        <template v-slot:activator="{ props }">
+          <v-btn color="primary" v-bind="props" >
+            {{ activeSortTitle }}
+          </v-btn>
+        </template>
         <v-list>
-          <v-list-item
-            v-for="(item, index) in items"
-            :key="index"
-            :value="index"
+          <v-list-item v-for="(item, index) in sortItems"
+                       :key="index"
+                       @click="sort(item)"
+                       :ripple="{ class: 'text-purple' }"
+
           >
             <v-list-item-title>{{ item.title }}</v-list-item-title>
           </v-list-item>
@@ -21,12 +20,10 @@
       </v-menu>
     </div>
   </v-container>
-  <!--  sort end-->
-  <!--  product start-->
   <v-container>
-    <v-row>
+    <v-row v-if="products.length > 0"  >
       <v-col
-        v-for="product in products"
+        v-for="product in paginatedItems"
         cols="3"
         :key="product.id"
       >
@@ -88,6 +85,16 @@
         </v-card>
       </v-col>
     </v-row>
+<v-row v-else class="d-flex justify-center align-center">
+  <h1 class="w-70 " style="margin-top: 150px" >Товары в этой категории отсутствуют,в скором времени они поступят в продажу </h1>
+</v-row>
+    <v-pagination
+      v-if="products.length > 0"
+      :total-visible="6"
+      color="primary"
+      v-model="page.current"
+      :length="totalPages"
+    ></v-pagination>
   </v-container>
   <!--  product-end-->
 </template>
@@ -99,19 +106,35 @@ export default {
 
   data: () => ({
     selection: 2,
+
+    page: {
+      current: 1,
+      length: 8,
+    },
     reveal: false,
-    items: [
-      {title: 'Price >'},
-      {title: 'Price <'},
-      {title: 'Name a-z'},
-      {title: 'Name z-a'},
+    sortItems: [
+      {title: 'Стандартная сортировка'},
+      {title: "сортировать от меньшей цены к большей"},
+      {title: "сортировать от большей цены к меньшей"},
+      {title: "Сортировать по имени от а до я"},
+      {title: "Сортировать по имени от я до а"},
     ],
+    activeSortTitle: "Сортировать",
     products: [],
   }),
   props: {
     id: {
       type: Number,
       required: true,
+    },
+  }, computed: {
+    paginatedItems() {
+      const start = (this.page.current - 1) * this.page.length;
+      const end = start + this.page.length;
+      return this.products.slice(start, end);
+    },
+    totalPages() {
+      return Math.ceil(this.products.length / this.page.length);
     },
   },
   methods: {
@@ -120,7 +143,27 @@ export default {
         .then(backend => {
           this.products = backend.data;
         })
-    }, addToCart(product) {
+    },
+    sort(item) {
+      if (item.title === "Стандартная сортировка") {
+        this.activeSortTitle = "Стандартная сортировка";
+        this.products.sort((a, b) => a.id - b.id); // Стандартная сортировка
+      }
+      if (item.title === "сортировать от меньшей цены к большей") {
+        this.activeSortTitle = "сортировать от меньшей цены к большей";
+        this.products.sort((a, b) => a.price - b.price);
+      } else if (item.title === "сортировать от большей цены к меньшей") {
+        this.activeSortTitle = "сортировать от большей цены к меньшей";
+        this.products.sort((a, b) => b.price - a.price);
+      } else if (item.title === "Сортировать по имени от я до а") {
+        this.activeSortTitle = "Сортировать по имени от я до а";
+        this.products.sort((a, b) => b.name.localeCompare(a.name));
+      } else if (item.title === "Сортировать по имени от а до я") {
+        this.activeSortTitle = "Сортировать по имени от а до я";
+        this.products.sort((a, b) => a.name.localeCompare(b.name));
+      }
+    },
+    addToCart(product) {
       this.$store.commit('addToCart', product); // Добавляем товар в корзину
       this.showAlert('Товар добавлен');
     },

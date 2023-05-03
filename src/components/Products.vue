@@ -1,14 +1,19 @@
 <template>
   <v-container>
-    <div class="text-end">
+    <div class="text-start">
       <v-menu open-on-hover>
         <template v-slot:activator="{ props }">
-          <v-btn color="primary" v-bind="props">
+          <v-btn color="primary" v-bind="props" >
             {{ activeSortTitle }}
           </v-btn>
         </template>
         <v-list>
-          <v-list-item v-for="(item, index) in sortItems" :key="index" @click="sort(item)">
+          <v-list-item v-for="(item, index) in sortItems"
+                       :key="index"
+                       @click="sort(item)"
+                       :ripple="{ class: 'text-purple' }"
+
+          >
             <v-list-item-title>{{ item.title }}</v-list-item-title>
           </v-list-item>
         </v-list>
@@ -18,7 +23,7 @@
   <v-container>
     <v-row>
       <v-col
-        v-for="product in items"
+        v-for="product in paginatedItems"
         :key="product.id"
         cols="3"
       >
@@ -86,6 +91,13 @@
         </v-card>
       </v-col>
     </v-row>
+    <v-pagination
+      :total-visible="6"
+      color="primary"
+      v-model="page.current"
+      :length="totalPages"
+    ></v-pagination>
+
   </v-container>
 </template>
 <script>
@@ -97,6 +109,10 @@ export default {
     return {
       reveal: null,
       items: [],
+      page: {
+        current: 1,
+        length: 8,
+      },
       sortItems: [
         {title: 'Стандартная сортировка'},
         {title: "сортировать от меньшей цены к большей"},
@@ -110,10 +126,21 @@ export default {
   mounted() {
     this.getItems();
   },
+  computed: {
+    paginatedItems() {
+      const start = (this.page.current - 1) * this.page.length;
+      const end = start + this.page.length;
+      return this.items.slice(start, end);
+    },
+    totalPages() {
+      return Math.ceil(this.items.length / this.page.length);
+    },
+  },
   methods: {
     getItems() {
       axios.get("http://lar/api/items").then((response) => {
         this.items = response.data;
+        console.log(this.items);
       });
     },
     sort(item) {
@@ -139,6 +166,7 @@ export default {
       this.$store.commit('addToCart', product); // Добавляем товар в корзину
       this.showAlert('Товар добавлен');
     },
+
     showAlert() {
       const Toast = Swal.mixin({
         toast: true,
