@@ -75,8 +75,8 @@
         </v-table>
       </v-card-text>
       <v-container class="ml-5 d-flex">
-        <h3 class="text-start">Total price: </h3>
-        <p class="ma-auto">{{ $store.getters.totalPrice }} $</p>
+        <h3 class="text-start " style="font-size: 22px">Total price: </h3>
+        <p class="ma-auto text-red " style="font-weight: bold ;font-size: 22px" >{{ $store.getters.totalPrice }} $</p>
       </v-container>
       <v-container class="d-flex justify-end">
         <v-card-actions>

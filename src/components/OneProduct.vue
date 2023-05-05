@@ -1,8 +1,4 @@
 <template>
-
-  <v-container>
-    <h1> Корзина ({{ $store.state.cartCount }})</h1>
-  </v-container>
   <v-container>
     <v-row>
       <v-col

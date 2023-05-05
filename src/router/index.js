@@ -11,10 +11,18 @@ import Kypc from "@/components/Kypc";
 import Page from "@/components/Page";
 import SortMain from "@/components/SortMain";
 import NotFound from "@/Pages/NotFound";
+import TestComponent from "@/components/TestComponent";
+import PriceFilter from "@/components/PriceFilter";
+import FormAddProduct from "@/components/FormAddProduct";
+import OrderList from "@/Pages/OrderList";
 const routes = [
   {
     path: '/',
     component:MainPage
+  },
+  {
+    path: '/order-list',
+    component:OrderList
   },
   {
     path: '/about',
@@ -53,6 +61,18 @@ const routes = [
   {
     path: '/sort',
     component:SortMain,
+  },
+  {
+    path: '/fulltest',
+    component:FormAddProduct,
+  },
+  {
+    path: '/price',
+    component:PriceFilter,
+  },
+  {
+    path: '/tester',
+    component:TestComponent,
   },
   {
     path: '/:catchAll(.*)',
