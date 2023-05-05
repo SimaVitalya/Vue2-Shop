@@ -128,19 +128,23 @@ export default {
   },
   computed: {
     paginatedItems() {
-      const start = (this.page.current - 1) * this.page.length;
-      const end = start + this.page.length;
+      let start = (this.page.current -1 ) * this.page.length;
+      //тут мы минусуем 1 так как страница изначально 1
+      let end = start + this.page.length;
       return this.items.slice(start, end);
+      //slice - функция js сосдает используется для создания нового массива, содержащего копию части элементов исходного массива, которые определяются исходя из переданных параметров. this.items -это наш исходный массив start - индекс элемента, с которого начнется копирование , и end - индекс элемента, на котором закончится копирование
+
     },
     totalPages() {
       return Math.ceil(this.items.length / this.page.length);
+      //тут мы благодаря методу Math.ceil делим наше количество товаров на наше количество товаров в старнице и возвращаем значение которое округляется в большею сторону.без его бы не правьльно считало если число равно например 17\8 выдаст не 3 страницы а 2
     },
   },
   methods: {
     getItems() {
       axios.get("http://lar/api/items").then((response) => {
         this.items = response.data;
-        console.log(this.items);
+        console.log(this.items.length);
       });
     },
     sort(item) {

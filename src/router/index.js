@@ -11,6 +11,9 @@ import Kypc from "@/components/Kypc";
 import Page from "@/components/Page";
 import SortMain from "@/components/SortMain";
 import NotFound from "@/Pages/NotFound";
+import TestComponent from "@/components/TestComponent";
+import PriceFilter from "@/components/PriceFilter";
+import FullTest from "@/components/FullTest";
 const routes = [
   {
     path: '/',
@@ -53,6 +56,18 @@ const routes = [
   {
     path: '/sort',
     component:SortMain,
+  },
+  {
+    path: '/fulltest',
+    component:FullTest,
+  },
+  {
+    path: '/price',
+    component:PriceFilter,
+  },
+  {
+    path: '/tester',
+    component:TestComponent,
   },
   {
     path: '/:catchAll(.*)',

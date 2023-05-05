@@ -35,11 +35,11 @@
             label="Выберите способ оплаты"
             required>
           </v-select>
-          <v-btn  type="submit" color="primary">Submit</v-btn>
+          <v-btn type="submit" color="primary">Submit</v-btn>
         </v-form>
       </v-col>
       <v-col v-if="$store.state.cart.length > 0" cols='6'>
-        <v-card  width="600" height="665" class="overflow-y-auto">
+        <v-card width="600" height="367" max-height="665" class="overflow-y-auto">
           <v-card-text>
             <v-table>
               <thead>
@@ -131,6 +131,7 @@ import axios from "axios";
 export default {
   data() {
     return {
+      loading: false,
       form: {
         phone: '',
         firstname: '',
@@ -153,6 +154,9 @@ export default {
     },
   },
   methods: {
+    loading() {
+      this.loading =true
+    },
     submitForm() {
       const formData = new FormData();
       formData.append('phone', this.form.phone);

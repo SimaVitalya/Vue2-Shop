@@ -3,7 +3,7 @@
   <div>
     <v-container>
       <v-row>
-        <v-col cols="6">
+        <v-col cols="4">
           <div class="text-start mt-3">
             <v-menu open-on-hover>
               <template v-slot:activator="{ props }">
@@ -24,7 +24,22 @@
             </v-menu>
           </div>
         </v-col>
-        <v-col cols="6">
+        <v-col cols="3 " class="mt-3">
+
+          <v-range-slider
+            color="orange"
+            track-color="purple"
+            class="w-60"
+            thumb-label="always"
+            v-model="priceRange"
+            :min="minPrice"
+            :max="maxPrice"
+            @input="getItems"
+            thumb-color="orange"
+
+          />
+        </v-col>
+        <v-col cols="4">
           <div class=" mx-auto text-center">
             <v-text-field
               v-model="searchQuery"
@@ -129,9 +144,13 @@ export default {
     return {
       searchQuery: '',
       items: [],
+      priceRange: [0,0], // начальный диапазон цен
+      minPrice: 0, // минимальная цена в списке товаров
+      maxPrice: 0, // максимальная цена в списке товаров
       page: {
         current: 1,
-        perPage: 8
+        perPage: 8,
+
       },
       sortItems: [
         {title: 'Стандартная сортировка'},
@@ -148,11 +167,30 @@ export default {
     this.getItems();
   },
   methods: {
-    getItems() {
-      axios.get("http://lar/api/items").then((response) => {
+
+    async getItems() {
+      try {
+        const response = await axios.get("http://lar/api/items");
         this.items = response.data;
-      });
+        // Вычисляем минимальную и максимальную цены
+        let minPrice = 0;
+        let maxPrice = 0;
+        this.items.forEach(item => {
+          if (item.price < minPrice) {
+            minPrice = item.price;
+          }
+          if (item.price > maxPrice) {
+            maxPrice = item.price;
+          }
+        });
+        this.minPrice = minPrice;
+        this.maxPrice = maxPrice;
+        this.priceRange = [0, maxPrice];
+      } catch (error) {
+        console.log(error);
+      }
     },
+
     addToCart(product) {
       this.$store.commit('addToCart', product); // Добавляем товар в корзину
       this.showAlert('Товар добавлен');
@@ -198,11 +236,9 @@ export default {
     filteredItems() {
       return this.items.filter(item => {
         const nameMatch = item.name.toLowerCase().includes(this.searchQuery.toLowerCase());
-        // const descMatch = item.description.toLowerCase().includes(this.searchQuery.toLowerCase()); это поиск по описананию
-        // return nameMatch || descMatch;
-        return nameMatch;
+        const priceMatch = item.price >= this.priceRange[0] && item.price <= this.priceRange[1];
+        return nameMatch && priceMatch;
       });
-
     },
     paginatedItems() {
       const start = (this.page.current - 1) * this.page.perPage;
@@ -212,7 +248,7 @@ export default {
     totalPages() {
       return Math.ceil(this.filteredItems.length / this.page.perPage);
     },
-  }
+  },
 }
 
 </script>

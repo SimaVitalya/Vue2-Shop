@@ -30,6 +30,19 @@
             <v-btn color="purple" variant="text">
               <router-link class="text-decoration-none" to="/products">Products</router-link>
             </v-btn>
+            <v-btn color="purple" variant="text">
+              <router-link class="text-decoration-none" to="/tester">tester</router-link>
+            </v-btn>
+            <v-btn color="purple" variant="text">
+              <router-link class="text-decoration-none" to="/price">price</router-link>
+            </v-btn>
+            <v-btn color="purple" variant="text">
+              <router-link class="text-decoration-none" to="/fulltest">fulltest</router-link>
+            </v-btn>
+
+            <v-btn color="purple" variant="text">
+              <router-link class="text-decoration-none" to="/sort">sort</router-link>
+            </v-btn>
             <v-menu bottom left>
               <template v-slot:activator="{ props }">
                 <v-btn  class="text-decoration-none" color="purple" variant="text" v-bind="props">categories</v-btn>
