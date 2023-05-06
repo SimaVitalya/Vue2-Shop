@@ -13,7 +13,7 @@
           >
           </v-img>
         </v-col>
-        <v-col cols="4" class="mt-n1">
+        <v-col cols="5" class="mt-n1">
           <v-text-field
             v-model="search"
             append-icon="mdi-magnify"
@@ -22,7 +22,7 @@
             hide-details
           ></v-text-field>
         </v-col>
-        <v-col cols="7 " class="text-end">
+        <v-col cols="6">
           <v-container class="mt-n4">
             <v-btn color="purple" variant="text">
               <router-link class="text-decoration-none" to="/">Main</router-link>
@@ -30,23 +30,6 @@
             <v-btn color="purple" variant="text">
               <router-link class="text-decoration-none" to="/products">Products</router-link>
             </v-btn>
-<!--            <v-btn color="purple" variant="text">-->
-<!--              <router-link class="text-decoration-none" to="/tester">tester</router-link>-->
-<!--            </v-btn>-->
-<!--            <v-btn color="purple" variant="text">-->
-<!--              <router-link class="text-decoration-none" to="/price">price</router-link>-->
-<!--            </v-btn>-->
-<!--            <v-btn color="purple" variant="text">-->
-<!--              <router-link class="text-decoration-none" to="/fulltest">fulltest</router-link>-->
-<!--            </v-btn>-->
-
-<!--            <v-btn color="purple" variant="text">-->
-<!--              <router-link class="text-decoration-none" to="/sort">sort</router-link>-->
-<!--            </v-btn>-->
-            <v-btn color="purple" variant="text">
-              <router-link class="text-decoration-none" to="/order-list">order</router-link>
-            </v-btn>
-
             <v-menu bottom left>
               <template v-slot:activator="{ props }">
                 <v-btn  class="text-decoration-none" color="purple" variant="text" v-bind="props">categories</v-btn>
@@ -61,9 +44,9 @@
               </v-list>
             </v-menu>
 
-<!--            <v-btn color="purple" variant="text">-->
-<!--              <router-link class="text-decoration-none" to="/ordering">FORM</router-link>-->
-<!--            </v-btn>-->
+            <v-btn color="purple" variant="text">
+              <router-link class="text-decoration-none" to="/ordering">FORM</router-link>
+            </v-btn>
             <v-btn color="black" icon="mdi mdi-account" variant="text"></v-btn>
             <cart-modal ref="cart-modal"></cart-modal>
 <!--            <v-btn @click="openModal" color="black" icon="mdi mdi-basket" variant="text"></v-btn>-->

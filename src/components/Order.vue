@@ -3,20 +3,13 @@
     <v-row>
       <v-col cols="6">
         <v-form @submit.prevent="submitForm">
-          <v-text-field :rules="phoneRules" color="success" v-model="form.phone" label="Введите номер телефона"
-                        required></v-text-field>
-          <v-text-field :rules="firstnameRules" color="success" v-model="form.firstname" label="Введите имя"
-                        required></v-text-field>
-          <v-text-field :rules="lastnameRules" color="success" v-model="form.lastname" label="Введите фамилию"
-                        required></v-text-field>
-          <v-text-field :rules="emailRules" color="success" v-model="form.email" label="Введите электронную почту"
-                        required></v-text-field>
+          <v-text-field v-model="form.phone" label="Введите номер телефона" required></v-text-field>
+          <v-text-field v-model="form.firstname" label="Введите имя" required></v-text-field>
+          <v-text-field v-model="form.lastname" label="Введите фамилию" required></v-text-field>
+          <v-text-field v-model="form.name" label="Введите электронную почту" required></v-text-field>
           <v-select
             v-model="form.region"
             :items="regions"
-            :loading="isLoading"
-            color="success"
-            :rules="regionRules"
             label="Введите область">
           </v-select>
           <v-select
@@ -25,19 +18,12 @@
             :item-title="(city) => city.name"
             :item-value="(city) => city.ref"
             :items="cities"
-            :rules="cityRules"
-            :loading="isLoading"
-            color="success"
             label="Введите город"
           ></v-select>
           <v-select
             v-if="postOffices.length > 0"
             v-model="form.postOffice"
-            :rules="officesRules"
             :items="postOffices"
-            :loading="isLoading"
-            color="success"
-
             :item-value="(postOffice) => postOffice.name"
             :item-title="(postOffice) => postOffice.name"
             label="Выберите отделение Новой Почты">
@@ -46,18 +32,14 @@
             v-if="postOffices.length > 0"
             :items="['Visa','MasterCard']"
             v-model="form.paymentMethod"
-            :rules="paymentRules"
-            color="success"
-            hint="Интеграции еще нет"
             label="Выберите способ оплаты"
             required>
           </v-select>
-          <v-btn v-if="$store.state.cart.length > 0"  type="submit" color="primary">Submit</v-btn>
-          <v-btn v-else disabled type="submit"  color="black">Submit</v-btn>
+          <v-btn  type="submit" color="primary">Submit</v-btn>
         </v-form>
       </v-col>
       <v-col v-if="$store.state.cart.length > 0" cols='6'>
-        <v-card width="600" min-height="367" max-height="665" class="overflow-y-auto">
+        <v-card  width="600" height="665" class="overflow-y-auto">
           <v-card-text>
             <v-table>
               <thead>
@@ -145,78 +127,10 @@
 
 <script>
 import axios from "axios";
-import Swal from "sweetalert2";
-import {required, email} from '@vuelidate/validators'
 
 export default {
   data() {
-
     return {
-
-      phoneRules: [
-        value => {
-          if (value) return true
-
-          return 'Укажите номер телефона.'
-        },
-        value => {
-          if (/^\d{5,20}$/.test(value)) return true
-
-          return 'Номер телефона должен содержать от 5 до 20 цифр и содержать только цифры.'
-        }
-      ],
-      firstnameRules: [
-        value => {
-          if (value) return true
-
-          return 'Введите имя.'
-        },
-        value => {
-          if (value?.length <= 40) return true
-
-          return 'Имя должно содержать менее 40 символов.'
-        },
-      ],
-      lastnameRules: [
-        value => {
-          if (value) return true
-
-          return 'Введите фамилию.'
-        },
-        value => {
-          if (value?.length <= 40) return true
-
-          return 'Фамилия должна содержать менее 40 символов.'
-        },
-      ],
-      emailRules: [
-        value => {
-          if (value) return true
-
-          return 'Введите электронную почту.'
-        },
-        value => {
-          if (/.+@.+\..+/.test(value)) return true
-
-          return 'Электронная почта должна быть действующей.'
-        },
-      ],
-      regionRules: [
-        value => !!value || 'Выберите Область.',
-      ],
-      cityRules: [
-        value => !!value || 'Выберите Город.',
-      ],
-      paymentRules: [
-        value => !!value || 'Выберите метод оплаты',
-      ],
-      officesRules: [
-        value => !!value || 'Выберите отделение.',
-      ],
-
-      isLoading: false,
-
-      loading: false,
       form: {
         phone: '',
         firstname: '',
@@ -230,12 +144,7 @@ export default {
       regions: [],
       cities: [],
       postOffices: [],
-      status: '',
-      product_id: '',
-      quantity: '',
-      price: '',
-      name: '',
-      image: ''
+
     }
   },
   computed: {
@@ -243,14 +152,7 @@ export default {
       return this.$store.state.cartCount;
     },
   },
-  created() {
-    console.log(this.$store.state.cart)
-
-  },
   methods: {
-    loading() {
-      this.loading = true
-    },
     submitForm() {
       const formData = new FormData();
       formData.append('phone', this.form.phone);
@@ -261,70 +163,42 @@ export default {
       formData.append('city', this.form.city);
       formData.append('postOffice', this.form.postOffice);
 
-      axios.post('http://lar/api/addData', {
-        phone: this.form.phone,
-        firstname: this.form.firstname,
-        lastname: this.form.lastname,
-        email: this.form.email,
-        region: this.form.region,
-        city: this.form.city,
-        postOffice: this.form.postOffice,
-        paymentMethod: this.form.paymentMethod,
-        total_price: this.$store.getters.totalPrice,
-        cart: this.$store.state.cart,
+      axios.post('http://lar/api/create', formData)
+        .then(response => {
+          this.form.phone = null
+          this.form.firstname = null
+          this.form.lastname = null
+          this.form.email = null
+          this.form.region = null
+          this.form.city = null
+          this.form.postOffice = null
+          this.form.paymentMethod = null
+          console.log(response)
 
-      }).then(response => {
-        this.form.phone = null
-        this.form.firstname = null
-        this.form.lastname = null
-        this.form.email = null
-        this.form.region = null
-        this.form.city = null
-        this.form.postOffice = null
-        this.form.paymentMethod = null
-        this.$store.commit('clearCart');
-        this.$store.commit('clearCount')
-
-        Swal.fire({
-          title: 'Success!',
-          text: 'The form has been submitted successfully.',
-          icon: 'success',
-          timer: 1300,
-          timerProgressBar: true,
-          showConfirmButton: false,
-          background: '#000'
-        });
-        console.log(response)
-
-      })
-        .catch(error => {
-          console.log(error.response.data);
-
-
-        });
-
+        }).catch(error => {
+        console.log(error);
+      });
     },
 
     showRegions() {
-      this.isLoading = true; // установка флага isLoading в true перед началом выполнения запроса
-
+      this.$swal.fire('wait for loading...')
+      this.$swal.showLoading()
       axios.get(`http://lar/api/region`)
-        .then(response => {
-          this.regions = response.data.Ru;
+        .then(backend => {
+
+          this.regions = backend.data.Ru;
           console.log(this.regions)
+          this.$swal.close()
+          this.$swal.hideLoading()
         })
         .catch(error => {
           console.log(error);
-        })
-        .finally(() => {
-          this.isLoading = false; // установка флага isLoading в false после завершения запроса
         });
     },
     showCities(region) {
-      // this.$swal.fire('wait for loading...')
-      // this.$swal.showLoading()
+      this.$swal.fire('wait for loading...')
+      this.$swal.showLoading()
       // Сбрасываем выбранный город в форме
-      this.isLoading = true;
       this.form.city = '';
       // Очищаем список городов
       this.cities = [];
@@ -332,46 +206,34 @@ export default {
         .then(response => {
           this.cities = response.data['Ru'];
           console.log(this.cities)
-          // this.$swal.close()
-          // this.$swal.hideLoading()
+          this.$swal.close()
+          this.$swal.hideLoading()
         })
         .catch(error => {
           console.log(error);
-        })
-        .finally(() => {
-          this.isLoading = false; // установка флага isLoading в false после завершения запроса
         });
-
     }
     ,
     showPostOffices() {
       if (this.form.city) {
-        // this.$swal.fire('wait for loading...')
-        // this.$swal.showLoading()
-        this.isLoading = true;
-        this.form.postOffice = '';
-        // Очищаем список городов
-        this.postOffices = [];
+        this.$swal.fire('wait for loading...')
+        this.$swal.showLoading()
         axios.post(`http://lar/api/postalOffices`, {
           'city_ref': this.form.city
         })
           .then(response => {
             this.postOffices = response.data['Ru'];
             console.log(` ${this.form.city}: ${this.postOffice.length}`);
-            // this.$swal.close()
-            // this.$swal.hideLoading()
+            this.$swal.close()
+            this.$swal.hideLoading()
           })
           .catch(response => {
             console.log(response)
             this.postOffice = response.data;
             console.log(this.postOffice);
-            // this.$swal.close()
-            // this.$swal.hideLoading()
-          })
-          .finally(() => {
-            this.isLoading = false; // установка флага isLoading в false после завершения запроса
+            this.$swal.close()
+            this.$swal.hideLoading()
           });
-
       }
     },
     removeFromCart(product) {
@@ -407,13 +269,6 @@ export default {
 
 
   },
-  validation: {
-    form: {
-      phone: {
-        required
-      }
-    }
-  }
 }
 </script>
 <style scoped>
@@ -438,8 +293,27 @@ export default {
 .overflow-y-auto::-webkit-scrollbar-thumb:hover {
   background-color: #555;
 }
+</style>
+<style scoped>
 
-.red {
-  color: red;
+
+/* Стили для скроллбара */
+.overflow-y-auto::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+.overflow-y-auto::-webkit-scrollbar-track {
+  background-color: #f5f5f5;
+  border-radius: 5px;
+}
+
+.overflow-y-auto::-webkit-scrollbar-thumb {
+  background-color: #888;
+  border-radius: 5px;
+}
+
+.overflow-y-auto::-webkit-scrollbar-thumb:hover {
+  background-color: #555;
 }
 </style>
