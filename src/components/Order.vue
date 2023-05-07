@@ -406,9 +406,65 @@ export default {
 }
 </script>
 <style scoped>
+span {
+  font-weight: bold;
+  color: #2ff607;
+}
 
+.v-card {
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
 
-/* Стили для скроллбара */
+.v-list-item {
+  border-bottom: 1px solid #ccc;
+}
+
+.v-list-item:last-child {
+  border-bottom: none;
+}
+
+.v-btn {
+  text-transform: none;
+}
+
+.v-dialog .v-card {
+  border-radius: 4px;
+}
+
+.v-dialog .v-card-title {
+  background-color: #604b7f;
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+  padding: 16px;
+}
+
+.v-dialog .v-card-text {
+  padding: 16px;
+  overflow-y: auto;
+}
+
+.v-dialog .v-list {
+  padding: 0;
+  overflow-y: auto;
+}
+
+.v-dialog .v-list-item-avatar {
+  width: 80px;
+  height: 80px;
+  margin-right: 16px;
+}
+
+.v-dialog .v-list-item-content {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.v-dialog .v-card-actions {
+  padding: 16px;
+  border-top: 1px solid #ccc;
+}
+
 .overflow-y-auto::-webkit-scrollbar {
   width: 10px;
   height: 10px;
@@ -428,7 +484,4 @@ export default {
   background-color: #555;
 }
 
-.red {
-  color: red;
-}
 </style>

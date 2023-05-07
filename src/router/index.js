@@ -7,10 +7,10 @@ import Products from "@/components/Products";
 import Form from "@/components/Page";
 import OneProduct from "@/components/OneProduct";
 import Order from "@/components/Order";
-import Kypc from "@/components/Kypc";
 import Page from "@/components/Page";
 import SortMain from "@/components/SortMain";
 import NotFound from "@/Pages/NotFound";
+import MyOrder from "@/components/MyOrder";
 const routes = [
   {
     path: '/',
@@ -33,9 +33,10 @@ const routes = [
     component:Order,
   },
   {
-    path: '/test',
-    component:Kypc,
+    path: '/myOrders',
+    component:MyOrder,
   },
+
   {
     path: '/categories/:id',
     component:CategoriesPage,

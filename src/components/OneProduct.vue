@@ -34,7 +34,6 @@
             </v-btn>
           </v-card-actions>
 
-          <v-expand-transition>
             <v-card
               v-if="reveal === product.id"
               class="v-card--reveal"
@@ -51,14 +50,12 @@
                   variant="text"
                   color="teal-accent-4"
                   @click="reveal = null"
+                  style="margin-bottom: 10px;"
                 >
                   Close
                 </v-btn>
               </v-card-actions>
             </v-card>
-          </v-expand-transition>
-
-          <v-divider class="mx-4"></v-divider>
           <v-card-actions>
             <v-btn block color="orange" @click="addToCart(product)">
               Add to Cart

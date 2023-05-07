@@ -29,7 +29,7 @@
       >
         <v-card
           variant="outlined"
-          class="mx-auto rounded-lg"
+          class="mx-auto rounded-lg overflow-auto"
           max-width="250"
         >
           <v-card-title>

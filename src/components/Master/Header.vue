@@ -13,7 +13,7 @@
           >
           </v-img>
         </v-col>
-        <v-col cols="5" class="mt-n1">
+        <v-col cols="4" class="mt-n1">
           <v-text-field
             v-model="search"
             append-icon="mdi-magnify"
@@ -22,13 +22,16 @@
             hide-details
           ></v-text-field>
         </v-col>
-        <v-col cols="6">
+        <v-col cols="7 " class="text-end">
           <v-container class="mt-n4">
             <v-btn color="purple" variant="text">
               <router-link class="text-decoration-none" to="/">Main</router-link>
             </v-btn>
             <v-btn color="purple" variant="text">
               <router-link class="text-decoration-none" to="/products">Products</router-link>
+            </v-btn>
+            <v-btn color="purple" variant="text">
+              <router-link class="text-decoration-none" to="/myOrders">Order</router-link>
             </v-btn>
             <v-menu bottom left>
               <template v-slot:activator="{ props }">

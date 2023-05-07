@@ -64,7 +64,7 @@
         >
           <v-card
             variant="outlined"
-            class="mx-auto rounded-lg"
+            class="mx-auto rounded-lg "
             max-width="250"
           >
             <v-card-title>
@@ -96,7 +96,7 @@
             <v-expand-transition>
               <v-card
                 v-if="reveal === product.id"
-                class="v-card--reveal"
+                class="v-card--reveal overflow-auto"
                 style="height: 100%;"
               >
                 <v-card-text class="pb-0">

@@ -22,6 +22,24 @@ export default {
 };
 </script>
 <style>
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: #f5f5f5;
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #aaa;
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #888;
+}
 .text-decoration-none {
   color: inherit;
   text-decoration: none;
