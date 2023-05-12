@@ -107,32 +107,34 @@
 import axios from "axios";
 
 export default {
-  data: () => ({
-    loading: false,
+  data() {
+    return {
+      loading: false,
+      visible: false,
+      name: null,
+      email: null,
+      password: null,
+      confirmPassword: null,
+      error: '',
+      nameRules: [
+        v => !!v || 'Name is required',
+        v => (v && v.length >= 3) || 'Name must contain at least 3 characters',
+      ],
+      emailRules: [
+        v => !!v || 'Email is required',
+        v => /.+@.+\..+/.test(v) || 'Email must be valid',
+      ],
+      passwordRules: [
+        v => !!v || 'Password is required',
+        v => (v && v.length >= 8) || 'Password must contain at least 8 characters',
+      ],
+      confirmPasswordRules: [
+        v => !!v || 'Confirm password is required',
+        v => v === this.password || 'Confirm password does not match password',
+      ],
+    }
+  },
 
-    visible: false,
-    name: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
-    error:'',
-    nameRules: [
-      v => !!v || 'Name is required',
-      v => (v && v.length >= 3) || 'Name must contain at least 3 characters',
-    ],
-    emailRules: [
-      v => !!v || 'Email is required',
-      v => /.+@.+\..+/.test(v) || 'Email must be valid',
-    ],
-    passwordRules: [
-      v => !!v || 'Password is required',
-      v => (v && v.length >= 8) || 'Password must contain at least 8 characters',
-    ],
-    confirmPasswordRules: [
-      v => !!v || 'Confirm password is required',
-      v => v === this.password || 'Confirm password does not match password',
-    ],
-  }),
   methods: {
     store() {
       this.loading = true
@@ -143,22 +145,22 @@ export default {
         confirmPassword: this.confirmPassword,
       }).then(res => {
         this.email = null
-          this.name = null
-          this.password = null
-          this.confirmPassword = null
+        this.name = null
+        this.password = null
+        this.confirmPassword = null
         localStorage.setItem('access_token',res.data.access_token)
-        this.$router.push({name:'user.personal'})
-          console.log(res)
+        this.$router.push({name: 'user.personal'})
+        console.log(res)
       })
         .catch(error => {
           this.loading = false
-
           this.error = error.response.data.error
         })
     }
   },
+
   mounted() {
     console.log(localStorage.getItem('access_token'));
   },
-}
+};
 </script>

@@ -1,16 +1,9 @@
 <template>
-  <v-container fluid class="bg-black mb-10 " style="max-height: 100px"
-  >
+  <v-container fluid class="bg-black mb-10 " style="max-height: 100px">
     <v-container>
       <v-row>
-        <v-col cols="2"
-        >
-          <v-img class="mt-n1"
-                 src="test1.logo.png"
-                 width="150"
-                 height="70"
-          >
-          </v-img>
+        <v-col cols="2">
+          <v-img class="mt-n1" src="test1.logo.png" width="150" height="70"></v-img>
         </v-col>
         <v-col cols="4" class="mt-n1">
           <v-text-field clearable v-model="searchTerm" @input="searchItems" label="Search products"></v-text-field>
@@ -23,7 +16,7 @@
             v-if="items.length && searchTerm"
             style="z-index: 1000;"
           >
-            <v-list-item v-for="item in items" :key="item.id">
+            <v-list-item v-for="item in items" :key="item.id" @click="handleItemClick">
               <router-link class="text-decoration-none" :to="`/product/${item.id}`">
                 <v-list-item-title>{{ item.name }}</v-list-item-title>
               </router-link>
@@ -83,71 +76,86 @@
 
   </v-container>
 </template>
-<script>
-import {useTheme} from 'vuetify'
-import axios from "axios";
-import CartModal from "@/components/CartModal";
 
+<script>
+import { useTheme } from 'vuetify';
+import axios from 'axios';
+import CartModal from '@/components/CartModal';
 
 export default {
-  components: {CartModal},
+  components: { CartModal },
   data() {
     return {
       searchTerm: '',
-      items: []
-    }
-  }
-  ,
+      items: [],
+    };
+  },
   setup() {
-    const theme = useTheme()
+    const theme = useTheme();
 
     return {
       dialogHeader: false,
       theme,
-      toggleTheme: () => theme.global.name.value = theme.global.current.value.dark ? 'light' : 'dark',
+      toggleTheme: () =>
+        (theme.global.name.value = theme.global.current.value.dark ? 'light' : 'dark'),
       categories: [],
-    }
-  }, methods: {
+    };
+  },
+  methods: {
     async getCategories() {
-      await axios.get('http://lar/api/categories')
-        .then(backend => {
-          this.categories = backend.data
-        })
+      await axios
+        .get('http://lar/api/categories')
+        .then((backend) => {
+          this.categories = backend.data;
+        });
     },
     searchItems() {
       if (!this.searchTerm) {
-        this.items = []; // если поисковый запрос пуст, очищаем список элементов
+        this.items = [];
         return;
       }
 
-      axios.get(`http://lar/api/items`)
-        .then(response => {
+      axios
+        .get(`http://lar/api/items`)
+        .then((response) => {
           console.log(response.data); // добавлено для отладки
-          this.items = response.data.filter(item =>
+          this.items = response.data.filter((item) =>
             item.name.toLowerCase().includes(this.searchTerm.toLowerCase())
-          )
+          );
 
           if (this.items.length === 0) {
-            this.items = [{id: 0, name: 'No items found'}]; // если элементы не найдены, добавляем заглушку
+            this.items = [{ id: 0, name: 'No items found' }];
           }
         })
-        .catch(error => {
+        .catch((error) => {
           console.error(error);
         });
     },
     openModal() {
-      this.$refs['cart-modal'].openButton()
-    }
+      this.$refs['cart-modal'].openButton();
+    },
+    handleItemClick() {
+      this.items = [];
+      this.searchTerm = '';
+    },
+    handleClickOutside(event) {
+      const target = event.target;
+      const list = document.querySelector('.v-list');
+      const input = document.querySelector('.v-text-field input');
+      if (!list.contains(target) && !input.contains(target)) {
+        this.items = [];
+        this.searchTerm = '';
+      }
+    },
   },
-
   mounted() {
-    this.getCategories()
-
+    this.getCategories();
+    document.addEventListener('click', this.handleClickOutside);
   },
-}
+  beforeUnmount() {
+    document.removeEventListener('click', this.handleClickOutside);
+  },
+};
 </script>
 
-<style scoped>
-
-
-</style>
+<style scoped></style>
