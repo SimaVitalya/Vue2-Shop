@@ -236,10 +236,10 @@ export default {
 
   },
   methods: {
-    loading() {
-      this.loading = true
-      this.loading = true
-    },
+    // loading() {
+    //   this.loading = true
+    //
+    // },
     submitForm() {
       const formData = new FormData();
       formData.append('phone', this.form.phone);

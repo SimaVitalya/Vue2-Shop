@@ -1,5 +1,37 @@
 <template>
-
+<v-container>
+  <!-- Слайдер рекомендуемых товаров -->
+  <v-row class="mt-">
+    <v-col cols="12">
+      <h3 class="text-uppercase mb-12 text-center">Recommended Products</h3>
+      <v-carousel
+        :interval="6000"
+        cycle height="400"
+        :show-arrows="false"
+        hide-delimiters
+      >
+        <v-carousel-item  v-for="(slide, index) in slides" :key="index">
+          <v-row>
+            <v-col v-for="(recommendation, index) in slide.recommendations" :key="index">
+              <v-card class="mx-auto" max-width="300">
+                <v-img :src="`http://lar/storage/${recommendation.image}`" cover height="200"></v-img>
+                <v-card-title>
+                  <h4 class="text-uppercase">{{ recommendation.name }}</h4>
+                  <div class="text-h5">{{ recommendation.price }}</div>
+                </v-card-title>
+                <router-link :to="`/product/${recommendation.id}`" class="text-decoration-none">
+                  <v-card-actions>
+                    <v-btn color="primary" text>View Details</v-btn>
+                  </v-card-actions>
+                </router-link>
+              </v-card>
+            </v-col>
+          </v-row>
+        </v-carousel-item>
+      </v-carousel>
+    </v-col>
+  </v-row>
+</v-container>
   <div>
     <v-container>
       <v-row>
@@ -63,24 +95,30 @@
           cols="3"
         >
           <v-card
-            variant="outlined"
             class="mx-auto rounded-lg "
-            max-width="250"
+            max-width="300"
           >
             <v-card-title>
-              <h4 class="text-h5">
-                {{ product.name }}
-              </h4>
+              <router-link class="text-decoration-none" :to="`/product/${product.id}`">
+                <h4 class="text-h5">
+                  {{ product.name }}
+                </h4>
+              </router-link>
+
               <v-spacer></v-spacer>
               <span class="text-h6">${{ product.price }}</span>
             </v-card-title>
             <v-card>
-              <v-img
-                class="mb-3"
-                height="250"
-                width="250"
-                :src="`http://lar/storage/${product.image}`"
-              ></v-img>
+              <router-link class="text-decoration-none" :to="`/product/${product.id}`">
+                <v-img
+                  class="mb-1"
+                  height="250"
+                  width="300"
+                  cover
+                  :src="`http://lar/storage/${product.image}`"
+                ></v-img>
+              </router-link>
+
             </v-card>
 
             <v-card-actions class="justify-center">
@@ -119,7 +157,7 @@
 
             <v-divider class="mx-4"></v-divider>
             <v-card-actions>
-              <v-btn block color="orange" @click="addToCart(product)">
+              <v-btn block color="primary" @click="addToCart(product)">
                 Add to Cart
               </v-btn>
             </v-card-actions>
@@ -127,6 +165,7 @@
         </v-col>
       </v-row>
       <v-pagination
+        class="mt-10"
         :total-visible="6"
         color="primary"
         v-model="page.current"
@@ -144,6 +183,8 @@ export default {
     return {
       searchQuery: '',
       items: [],
+      slides: [],
+      products: [],
       priceRange: [0, 0], // начальный диапазон цен
       minPrice: 0, // минимальная цена в списке товаров
       maxPrice: 0, // максимальная цена в списке товаров
@@ -165,6 +206,7 @@ export default {
   },
   created() {
     this.getItems();
+    this.getProductsRec();
   },
 
   methods: {
@@ -191,6 +233,29 @@ export default {
         console.log(error);
       }
       console.log(this.items.length);
+    },
+    async getProductsRec() {
+      try {
+        const response = await axios.get("http://lar/api/showRecommendation");
+        this.products = response.data;
+        const items = response.data;
+        // Group items into slides
+        const slideCount = Math.ceil(items.length / 4);
+        for (let i = 0; i < slideCount; i++) {
+          const slideItems = items.slice(i * 4, (i + 1) * 4);
+          const slide = {
+            recommendations: slideItems.map((item) => ({
+              id: item.id,
+              name: item.name,
+              image: item.image,
+              price: `$${item.price}`,
+            })),
+          };
+          this.slides.push(slide);
+        }
+      } catch (error) {
+        console.log(error);
+      }
     },
 
     addToCart(product) {

@@ -1,4 +1,14 @@
 <template>
+  <v-container>
+    <h1 style="margin-left: 30px" class="text-end text-button">Personal Page
+      <router-link to="">
+        <v-btn class="ml-4" color="primary" dark @click.prevent="logout">
+          <v-icon left>mdi-logout</v-icon>
+          Logout
+        </v-btn>
+      </router-link>
+    </h1>
+  </v-container>
   <div>
     <h2 class="text-center mt-5 text-h4 ">My Orders</h2>
     <v-container>
@@ -100,6 +110,7 @@
 
 <script>
 import api from "@/api";
+
 export default {
   data() {
     return {
@@ -121,81 +132,15 @@ export default {
         .catch(error => {
           console.log(error);
         });
+    }, logout() {
+      api.get('http://lar/api/auth/logout')
+        .then(response => {
+          localStorage.removeItem('access_token')
+          this.$router.push({name: 'user.login'})
+        })
     },
 
   }
 };
 </script>
 
-<style scoped>
-.v-card--reveal {
-  bottom: 0;
-  opacity: 1 !important;
-  position: absolute;
-  width: 100%;
-}
-
-/* Стили для скроллбара */
-
-
-span {
-  font-weight: normal;
-}
-
-.v-card {
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-
-.v-list-item {
-  border-bottom: 1px solid #ccc;
-}
-
-.v-list-item:last-child {
-  border-bottom: none;
-}
-
-.v-list-item-title {
-  font-weight: bold;
-}
-
-.v-btn {
-  text-transform: none;
-}
-
-.v-dialog .v-card {
-  border-radius: 4px;
-}
-
-.v-dialog .v-card-title {
-  background-color: #604b7f;
-  border-top-left-radius: 4px;
-  border-top-right-radius: 4px;
-  padding: 16px;
-}
-
-.v-dialog .v-card-text {
-  padding: 16px;
-}
-
-.v-dialog .v-list {
-  padding: 0;
-}
-
-.v-dialog .v-list-item-avatar {
-  width: 80px;
-  height: 80px;
-  margin-right: 16px;
-}
-
-.v-dialog .v-list-item-content {
-  padding-top: 0;
-  padding-bottom: 0;
-}
-
-
-.v-dialog .v-card-actions {
-  padding: 16px;
-  border-top: 1px solid #ccc;
-}
-</style>

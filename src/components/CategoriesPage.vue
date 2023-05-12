@@ -28,19 +28,28 @@
         :key="product.id"
       >
         <v-card
-          variant="outlined"
           class="mx-auto rounded-lg overflow-auto"
           max-width="250"
         >
           <v-card-title>
-            <h4 class="text-h5">
-              {{ product.name }}
-            </h4>
+            <router-link class="text-decoration-none" :to="`/product/${product.id}`">
+              <h4 class="text-h5">
+                {{ product.name }}
+              </h4>
+            </router-link>
             <v-spacer></v-spacer>
             <span class="text-h6">${{ product.price }}</span>
           </v-card-title>
           <v-card>
-            <v-img class="mb-3" height="250" width="250" :src="`http://lar/storage/${product.image}`"></v-img>
+            <router-link class="text-decoration-none" :to="`/product/${product.id}`">
+              <v-img
+                class="mb-1"
+                height="250"
+                width="300"
+                cover
+                :src="`http://lar/storage/${product.image}`"
+              ></v-img>
+            </router-link>
           </v-card>
           <v-card-actions class="justify-center">
             <v-btn
@@ -89,6 +98,7 @@
   <h1 class="w-70 " style="margin-top: 150px" >Товары в этой категории отсутствуют,в скором времени они поступят в продажу </h1>
 </v-row>
     <v-pagination
+      class="mt-10"
       v-if="products.length > 0"
       :total-visible="6"
       color="primary"
