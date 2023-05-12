@@ -19,14 +19,15 @@
             <v-list-item v-for="item in items" :key="item.id" @click="handleItemClick">
               <router-link class="text-decoration-none" :to="`/product/${item.id}`">
                 <v-list-item-title>{{ item.name }}</v-list-item-title>
+                <v-img
+                  class="mb-1"
+                  height="70"
+                  width="70"
+                  cover
+                  :src="`http://lar/storage/${item.image}`"
+                ></v-img>
               </router-link>
-              <v-img
-                class="mb-1"
-                height="70"
-                width="70"
-                cover
-                :src="`http://lar/storage/${item.image}`"
-              ></v-img>
+
             </v-list-item>
           </v-list>
         </v-col>
@@ -151,9 +152,6 @@ export default {
   mounted() {
     this.getCategories();
     document.addEventListener('click', this.handleClickOutside);
-  },
-  beforeUnmount() {
-    document.removeEventListener('click', this.handleClickOutside);
   },
 };
 </script>

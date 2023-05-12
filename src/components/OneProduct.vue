@@ -3,6 +3,14 @@
     <v-container class="d-flex justify-center">
       <v-row>
         <v-container class="d-flex justify-center">
+          <v-col v-if="product && product.images && product.images.length" cols="4">
+            <v-carousel style="width:300px; max-width:300px;"  cycle  show-arrows="hover" elevation="10" height="435"   class=" ml-16 rounded-lg" >
+
+              <v-carousel-item v-for="(image, index) in product.images" :key="index">
+                <v-img cover :src="`http://lar/storage/${image.image_path}`" contain></v-img>
+              </v-carousel-item>
+            </v-carousel>
+          </v-col>
           <v-col cols="4">
             <v-card elevation="10" height="430" width="300" class=" ml-3 rounded-lg" max-width="300">
               <v-card-title><h4 class="text-h5">{{ product.name }}</h4>
@@ -29,6 +37,7 @@
               <v-card-actions>
                 <v-btn block color="orange" @click="addToCart(product)">Add to Cart</v-btn>
               </v-card-actions>
+
             </v-card>
           </v-col>
           <v-col cols="3">
@@ -124,6 +133,7 @@ export default {
     async getProduct() {
       await axios.get(`http://lar/api/product/${this.id}`).then((backend) => {
         this.product = backend.data;
+        console.log(this.product)
       });
     },
     async getComments() {
