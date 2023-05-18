@@ -1,74 +1,69 @@
 <template>
-  <div>
-    <div v-if="!isPaymentSuccessful">
-      <h2>Make Payment</h2>
-      <form>
-        <div class="form-group">
-          <label for="card-number">Card Number</label>
-          <input type="text" class="form-control" id="card-number" v-model="cardNumber" placeholder="Card Number">
-        </div>
-        <div class="form-group">
-          <label for="card-expiry-month">Expiry Month</label>
-          <input type="text" class="form-control" id="card-expiry-month" v-model="cardExpiryMonth" placeholder="MM">
-        </div>
-        <div class="form-group">
-          <label for="card-expiry-year">Expiry Year</label>
-          <input type="text" class="form-control" id="card-expiry-year" v-model="cardExpiryYear" placeholder="YYYY">
-        </div>
-        <div class="form-group">
-          <label for="card-cvc">CVC</label>
-          <input type="text" class="form-control" id="card-cvc" v-model="cardCvc" placeholder="CVC">
-        </div>
-        <div class="form-group">
-          <label for="amount">Amount</label>
-          <input type="text" class="form-control" id="amount" v-model="amount" placeholder="Amount">
-        </div>
-        <button type="submit" class="btn btn-primary" @click.prevent="makePayment">Pay</button>
-      </form>
-    </div>
-    <div v-else>
-      <h2>Payment Successful</h2>
-    </div>
+  <div class="d-flex justify-center">
+    <v-form class="w-50" @submit.prevent="submit">
+      <v-text-field v-model="name" label="Name on card" required></v-text-field>
+      <v-text-field v-model="cardNumber" label="Card number" required></v-text-field>
+      <v-text-field v-model="expDate" label="Expiration date" required></v-text-field>
+      <v-text-field v-model="cvc" label="CVC" required></v-text-field>
+      <v-btn type="submit" color="primary">Pay</v-btn>
+    </v-form>
+
+
   </div>
 </template>
 
 <script>
-import axios from 'axios';
+import axios from "axios";
+import { loadStripe } from '@stripe/stripe-js';
 
 export default {
   data() {
     return {
-      isPaymentSuccessful: false,
-      cardNumber: '',
-      cardExpiryMonth: '',
-      cardExpiryYear: '',
-      cardCvc: '',
-      amount: ''
-    }
+      name: "",
+      cardNumber: "",
+      expDate: "",
+      cvc: "",
+      paymentStatus: null,
+      stripe: null
+    };
+  },
+  async mounted() {
+    this.stripe = await loadStripe(process.env.VUE_APP_STRIPE_PUBLIC_KEY);
   },
   methods: {
-    makePayment() {
-      Stripe.card.createToken({
-        number: this.cardNumber,
-        exp_month: this.cardExpiryMonth,
-        exp_year: this.cardExpiryYear,
-        cvc: this.cardCvc
-      }, (status, response) => {
-        if (status === 200) {
-          axios.post('/api/stripe-payment', {
-            amount: this.amount,
-            stripeToken: response.id
-          }).then((response) => {
-            console.log(response.data.message);
-            this.isPaymentSuccessful = true;
-          }).catch((error) => {
-            console.log(error.response.data.message);
-          });
-        } else {
-          console.log('Card validation failed');
-        }
-      });
-    }
-  }
-}
+    async submit() {
+      try {
+        const [expMonth, expYear] = this.expDate.split("/");
+        const { paymentMethod } = await this.stripe.createPaymentMethod({
+          type: "card",
+          card: {
+            number: this.cardNumber,
+            exp_month: expMonth,
+            exp_year: expYear,
+            cvc: this.cvc,
+          },
+        });
+
+        const response = await axios.post("/payment/pay", {
+          paymentMethodId: paymentMethod.id,
+        });
+
+        this.paymentStatus = response.data.success ? "success" : "error";
+      } catch (error) {
+        console.error(error);
+        this.paymentStatus = "error";
+
+        // Show an error message using SweetAlert2
+        await this.$swal({
+          title: "Error",
+          text: "An error occurred while processing your payment",
+          icon: "error",
+        });
+      }
+    },
+  },
+};
 </script>
+
+<style>
+</style>

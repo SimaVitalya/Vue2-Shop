@@ -139,15 +139,15 @@ export default {
       this.items = [];
       this.searchTerm = '';
     },
-    handleClickOutside(event) {
-      const target = event.target;
-      const list = document.querySelector('.v-list');
-      const input = document.querySelector('.v-text-field input');
-      if (!list.contains(target) && !input.contains(target)) {
-        this.items = [];
-        this.searchTerm = '';
-      }
-    },
+    // handleClickOutside(event) {
+    //   const target = event.target;
+    //   const list = document.querySelector('.v-list');
+    //   const input = document.querySelector('.v-text-field input');
+    //   if (!list.contains(target) && !input.contains(target)) {
+    //     this.items = [];
+    //     this.searchTerm = '';
+    //   }
+    // },
   },
   mounted() {
     this.getCategories();

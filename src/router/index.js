@@ -15,6 +15,7 @@ import Personal from "@/components/User/Personal";
 import VuetifyTest from "@/components/Master/VuetifyTest";
 import HomeMainPage from "@/components/Master/HomeMainPage";
 import Document from "@/components/Document";
+import StripeComponent from "@/components/User/StripeComponent";
 const routes = [
   {
     path: '/',
@@ -78,6 +79,11 @@ const routes = [
     path: '/page',
     name: 'page',
     component:Page,
+  },
+  {
+    path: '/stripe',
+    name: 'stripe',
+    component:StripeComponent,
   },
   {
     path: '/vuetify',
